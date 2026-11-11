@@ -27,7 +27,6 @@ PORT=8080 bun run start
 {
   "items": [
     {
-      "id": "braised-pork-rice",
       "name": "滷肉飯",
       "description": "慢燉滷肉配上熱騰騰的白飯。",
       "category": "主食",
@@ -37,7 +36,7 @@ PORT=8080 bun run start
 }
 ```
 
-`id` 必須唯一，只能使用小寫英文字母、數字及分隔用連字號，不能使用保留名稱 `random`。文字欄位不可空白；`price` 為新臺幣整數，範圍 0–1,000,000。空的 `items` 合法。購物車每項最多 99 份。
+不需要填寫 ID，只需修改名稱、描述、分類及價格。文字欄位不可空白；`price` 為新臺幣整數，範圍 0–1,000,000。空的 `items` 合法。購物車每項最多 99 份。
 
 開發時修改後重新整理即可；容器中的設定檔隨映像發布，必須重新建置。示範流程可修改名稱或價格，重新建置後比較畫面。
 
@@ -45,7 +44,7 @@ PORT=8080 bun run start
 
 ```bash
 curl http://localhost:8080/api/items
-curl http://localhost:8080/api/items/braised-pork-rice
+curl http://localhost:8080/api/items/item-1
 curl http://localhost:8080/api/items/random
 ```
 
@@ -54,6 +53,8 @@ curl http://localhost:8080/api/items/random
 | `GET /api/items` | `{ "items": [...] }` | 設定讀取失敗：500 |
 | `GET /api/items/[id]` | `{ "item": {...} }` | 不存在：404 |
 | `GET /api/items/random` | `{ "item": {...} }` | 空菜單：404 |
+
+API 會依菜單順序自動附上 `item-1`、`item-2` 等 ID；單品查詢使用清單回應中的 ID 即可。調整順序後 ID 會跟著改變，請重新整理頁面以重新載入菜單。
 
 所有回應使用 `Cache-Control: no-store`，錯誤格式為 `{ "error": "訊息" }`。隨機抽選發生於伺服器，每項機率相同，結果可能重複；在瀏覽器開發者工具的 Network 面板觀察請求。模擬結帳只改變頁面狀態，不送出訂單請求。
 
@@ -66,7 +67,7 @@ bun run validate:menu
 bun run check
 ```
 
-驗證包含價格是否為 0–1,000,000 的整數、必要文字欄位、ID 格式與唯一性。可將一項餐點的 `price` 暫時改成 `-1`，執行 `bun run validate:menu`，觀察非零結束碼與包含餐點 ID 的錯誤訊息；恢復合法價格後再執行，結果應通過。這個失敗示範可完全在本機完成。
+驗證包含價格是否為 0–1,000,000 的整數、必要文字欄位與設定檔格式。可將一項餐點的 `price` 暫時改成 `-1`，執行 `bun run validate:menu`，觀察非零結束碼與包含餐點順序與名稱的錯誤訊息；恢復合法價格後再執行，結果應通過。這個失敗示範可完全在本機完成。
 
 ## 本機容器與瀏覽器測試
 

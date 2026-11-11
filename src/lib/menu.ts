@@ -11,32 +11,24 @@ export function parseMenu(value: unknown): MenuItem[] {
     !Array.isArray(value.items)
   )
     throw new Error("config.items must be an array");
-  const ids = new Set<string>();
-  return value.items.map((item: unknown) => {
+  return value.items.map((item: unknown, index: number) => {
     if (!item || typeof item !== "object") throw new Error("Invalid menu item");
     const record = item as Record<string, unknown>;
-    for (const key of ["id", "name", "description", "category"]) {
+    for (const key of ["name", "description", "category"]) {
       if (typeof record[key] !== "string" || !record[key].trim())
         throw new Error(`Invalid item ${key}`);
     }
-    if (
-      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(record.id as string) ||
-      record.id === "random"
-    )
-      throw new Error("Invalid or reserved item id");
     if (
       !Number.isSafeInteger(record.price) ||
       (record.price as number) < 0 ||
       (record.price as number) > 1_000_000
     )
       throw new Error(
-        `Item "${record.id}": price must be an integer between 0 and 1000000; received ${JSON.stringify(record.price)}`,
+        `Item ${index + 1} ("${record.name}"): price must be an integer between 0 and 1000000; received ${JSON.stringify(record.price)}`,
       );
-    const result = record as MenuItem;
-    if (ids.has(result.id)) throw new Error(`Duplicate item id: ${result.id}`);
-    ids.add(result.id);
+    const result = record as Omit<MenuItem, "id">;
     return {
-      id: result.id,
+      id: `item-${index + 1}`,
       name: result.name,
       description: result.description,
       category: result.category,

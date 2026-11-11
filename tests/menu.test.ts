@@ -4,7 +4,6 @@ import { GET as list } from "../src/app/api/items/route";
 import { GET as detail } from "../src/app/api/items/[id]/route";
 import { GET as random } from "../src/app/api/items/random/route";
 const item = {
-  id: "rice",
   name: "飯",
   description: "示範",
   category: "主食",
@@ -12,7 +11,7 @@ const item = {
 };
 describe("menu validation", () => {
   test("accepts valid and empty menus", () => {
-    expect(parseMenu({ items: [item] })).toEqual([item]);
+    expect(parseMenu({ items: [item] })).toEqual([{ ...item, id: "item-1" }]);
     expect(parseMenu({ items: [] })).toEqual([]);
   });
   test("rejects malformed structure", () => {
@@ -24,9 +23,12 @@ describe("menu validation", () => {
     ])
       expect(() => parseMenu(value)).toThrow();
   });
-  test("rejects duplicates and reserved ids", () => {
-    expect(() => parseMenu({ items: [item, item] })).toThrow();
-    expect(() => parseMenu({ items: [{ ...item, id: "random" }] })).toThrow();
+  test("generates distinct repeatable IDs even for identical items", () => {
+    const menu = { items: [item, item] };
+    const parsed = parseMenu(menu);
+    expect(parsed.map((entry) => entry.id)).toEqual(["item-1", "item-2"]);
+    expect(parseMenu(menu)).toEqual(parsed);
+    expect(menu.items[0]).not.toHaveProperty("id");
   });
   test("accepts zero and maximum price", () => {
     for (const price of [0, 1_000_000])
@@ -34,7 +36,7 @@ describe("menu validation", () => {
   });
   test("identifies the item with a negative price", () => {
     expect(() => parseMenu({ items: [{ ...item, price: -1 }] })).toThrow(
-      'Item "rice": price must be an integer between 0 and 1000000; received -1',
+      'Item 1 ("飯"): price must be an integer between 0 and 1000000; received -1',
     );
   });
   test("rejects invalid prices", () => {
@@ -43,7 +45,8 @@ describe("menu validation", () => {
   });
   test("selects only from menu and handles empty/single menu", async () => {
     expect(chooseItem([])).toBeUndefined();
-    expect(chooseItem([item])).toEqual(item);
+    const single = parseMenu({ items: [item] });
+    expect(chooseItem(single)).toEqual(single[0]);
     const items = await readMenu();
     for (let i = 0; i < 30; i++) {
       const chosen = chooseItem(items);

@@ -15,7 +15,7 @@
 
 - Pinned Next.js 16.4.6, React 19.3.1, HeroUI 3.2.7, Bun 1.4.4.
 - TypeScript 5.9.3 is intentional: typescript-eslint currently rejects TS 7.
-- Menu IDs reserve `random` for the static API route; prices are integer TWD (0–1,000,000).
+- config.json requires no IDs. The shared parser assigns positional IDs (`item-1`, `item-2`, etc.) for API/cart use. They change when the menu is reordered; refresh the page after config changes. Prices are integer TWD (0–1,000,000).
 - API routes are dynamic with no-store responses and use a shared filesystem reader; config errors are logged only on the server.
 - Runtime executes standalone server.js with Bun as a non-root user. Explicitly copy config.json and static assets.
 - `public/.gitkeep` ensures fresh clones have the directory required by Docker COPY.
@@ -27,5 +27,7 @@
 - Host port 8080 was occupied; verification used 18080 and 19090 without touching the existing service.
 - Rebuilt an isolated copy with the first item renamed; its container API served the updated name and passed smoke tests. Original menu retained.
 - All task-created test containers stopped after validation; local images retained. No Google Cloud API mutations or deployments performed.
-- Cloud Build's check step now starts with `bun run validate:menu`, explicitly validating root config.json before lint/typecheck/tests. Invalid data exits 1 with a useful item ID and price error.
+- Cloud Build's check step now starts with `bun run validate:menu`, explicitly validating root config.json before lint/typecheck/tests. Invalid data exits 1 with the item position/name and price error.
 - Eight Bun tests pass, including accepted price boundaries and a negative-price diagnostic. Isolated CLI checks confirmed negative prices and malformed JSON exit 1 without modifying the real menu.
+
+- Learner-facing menu fields are name, description, category, and price only. Identical items are allowed and get distinct positional IDs; no persistence requires cross-version identity.
