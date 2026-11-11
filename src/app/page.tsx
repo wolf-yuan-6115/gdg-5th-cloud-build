@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button, Card, Chip } from "@heroui/react";
+import { Minus, Plus } from "lucide-react";
 import type { MenuItem } from "@/lib/types";
 
 const money = (value: number) => `NT$ ${value.toLocaleString("zh-TW")}`;
@@ -69,9 +70,7 @@ export default function Home() {
       [item.id]: Math.min(99, Math.max(0, (previous[item.id] ?? 0) + delta)),
     }));
     setCheckout(false);
-    setNotice(
-      delta > 0 ? `已加入${item.name}。` : `已更新${item.name}的數量。`,
-    );
+    setNotice("");
   }
   const selected = items.filter((item) => cart[item.id] > 0);
   const total = selected.reduce(
@@ -209,11 +208,12 @@ export default function Home() {
                         <Button
                           size="sm"
                           variant="tertiary"
+                          isIconOnly
                           aria-label={`減少${item.name}`}
                           isDisabled={checkout}
                           onPress={() => change(item, -1)}
                         >
-                          減少
+                          <Minus size={16} aria-hidden="true" />
                         </Button>
                         <span
                           className="tabular-nums"
@@ -224,11 +224,12 @@ export default function Home() {
                         <Button
                           size="sm"
                           variant="tertiary"
+                          isIconOnly
                           aria-label={`增加${item.name}`}
                           isDisabled={checkout || cart[item.id] >= 99}
                           onPress={() => change(item, 1)}
                         >
-                          增加
+                          <Plus size={16} aria-hidden="true" />
                         </Button>
                         <Button
                           size="sm"
@@ -273,7 +274,7 @@ export default function Home() {
                   isDisabled={!selected.length}
                   onPress={() => {
                     setCheckout(true);
-                    setNotice("請確認品項與金額。");
+                    setNotice("");
                   }}
                 >
                   模擬結帳
@@ -284,9 +285,11 @@ export default function Home() {
               </p>
             </Card.Footer>
           </Card>
-          <p role="status" className="mt-4 min-h-12 text-sm">
-            {notice}
-          </p>
+          {notice && (
+            <p role="status" className="mt-4 text-sm">
+              {notice}
+            </p>
+          )}
         </aside>
       </div>
       <footer className="mt-16 border-t border-separator pt-6 text-sm text-muted">
