@@ -1,0 +1,41 @@
+# Run manually only; see README for prerequisites. No cloud commands run locally.
+steps:
+  - id: check
+    name: oven/bun:1.4.4
+    entrypoint: sh
+    args:
+      - -c
+      - bun install --frozen-lockfile && bun run check
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID', '.']
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID']
+  - id: deploy
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID
+      - --region=${_REGION}
+      - --service-account=${_RUNTIME_SERVICE_ACCOUNT}
+      - --allow-unauthenticated
+      - --min-instances=0
+      - --max-instances=1
+      - --port=8080
+      - --memory=512Mi
+      - --cpu=1
+      - --quiet
+images:
+  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID'
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: food-demo
+  _SERVICE: food-demo
+  _RUNTIME_SERVICE_ACCOUNT: 'food-demo-runtime@$PROJECT_ID.iam.gserviceaccount.com'
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamicSubstitutions: true

@@ -9,7 +9,7 @@ describe('menu validation', () => {
   test('rejects malformed structure', () => { for (const value of [null, {}, { items: [null] }, { items: [{ ...item, name: '' }] }]) expect(() => parseMenu(value)).toThrow(); });
   test('rejects duplicates and reserved ids', () => { expect(() => parseMenu({ items: [item, item] })).toThrow(); expect(() => parseMenu({ items: [{ ...item, id: 'random' }] })).toThrow(); });
   test('rejects invalid prices', () => { for (const price of [-1, 1.5, '65', Infinity, 1000001]) expect(() => parseMenu({ items: [{ ...item, price }] })).toThrow(); });
-  test('selects only from menu and handles empty/single menu', async () => { expect(chooseItem([])).toBeUndefined(); expect(chooseItem([item])).toEqual(item); const items = await readMenu(); for (let i = 0; i < 30; i++) expect(items).toContainEqual(chooseItem(items)); });
+  test('selects only from menu and handles empty/single menu', async () => { expect(chooseItem([])).toBeUndefined(); expect(chooseItem([item])).toEqual(item); const items = await readMenu(); for (let i = 0; i < 30; i++) { const chosen = chooseItem(items); expect(chosen).toBeDefined(); if (chosen) expect(items).toContainEqual(chosen); } });
 });
 test('API responses, missing id and no-store', async () => {
   const response = await list(); expect(response.status).toBe(200); expect(response.headers.get('Cache-Control')).toBe('no-store');
