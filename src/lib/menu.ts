@@ -29,7 +29,9 @@ export function parseMenu(value: unknown): MenuItem[] {
       (record.price as number) < 0 ||
       (record.price as number) > 1_000_000
     )
-      throw new Error("Invalid item price");
+      throw new Error(
+        `Item "${record.id}": price must be an integer between 0 and 1000000; received ${JSON.stringify(record.price)}`,
+      );
     const result = record as MenuItem;
     if (ids.has(result.id)) throw new Error(`Duplicate item id: ${result.id}`);
     ids.add(result.id);

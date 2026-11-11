@@ -57,6 +57,17 @@ curl http://localhost:8080/api/items/random
 
 所有回應使用 `Cache-Control: no-store`，錯誤格式為 `{ "error": "訊息" }`。隨機抽選發生於伺服器，每項機率相同，結果可能重複；在瀏覽器開發者工具的 Network 面板觀察請求。模擬結帳只改變頁面狀態，不送出訂單請求。
 
+## 示範建置前的資料驗證
+
+Cloud Build 的 `check` 步驟會先驗證根目錄 `config.json`，再執行 lint、型別檢查與 Bun 測試；任何一項失敗，都會停止後續映像建置、推送與部署。
+
+```bash
+bun run validate:menu
+bun run check
+```
+
+驗證包含價格是否為 0–1,000,000 的整數、必要文字欄位、ID 格式與唯一性。可將一項餐點的 `price` 暫時改成 `-1`，執行 `bun run validate:menu`，觀察非零結束碼與包含餐點 ID 的錯誤訊息；恢復合法價格後再執行，結果應通過。這個失敗示範可完全在本機完成。
+
 ## 本機容器與瀏覽器測試
 
 ```bash

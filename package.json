@@ -10,7 +10,8 @@
     "lint": "bun --bun eslint .",
     "typecheck": "bun --bun tsc --noEmit",
     "test": "bun test tests",
-    "check": "bun run lint && bun run typecheck && bun test tests"
+    "check": "bun run validate:menu && bun run lint && bun run typecheck && bun test tests",
+    "validate:menu": "bun scripts/validate-menu.ts"
   },
   "dependencies": {
     "@heroui/react": "3.2.7",

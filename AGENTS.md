@@ -27,3 +27,5 @@
 - Host port 8080 was occupied; verification used 18080 and 19090 without touching the existing service.
 - Rebuilt an isolated copy with the first item renamed; its container API served the updated name and passed smoke tests. Original menu retained.
 - All task-created test containers stopped after validation; local images retained. No Google Cloud API mutations or deployments performed.
+- Cloud Build's check step now starts with `bun run validate:menu`, explicitly validating root config.json before lint/typecheck/tests. Invalid data exits 1 with a useful item ID and price error.
+- Eight Bun tests pass, including accepted price boundaries and a negative-price diagnostic. Isolated CLI checks confirmed negative prices and malformed JSON exit 1 without modifying the real menu.

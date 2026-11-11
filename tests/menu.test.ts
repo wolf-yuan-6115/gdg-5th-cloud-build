@@ -28,6 +28,15 @@ describe("menu validation", () => {
     expect(() => parseMenu({ items: [item, item] })).toThrow();
     expect(() => parseMenu({ items: [{ ...item, id: "random" }] })).toThrow();
   });
+  test("accepts zero and maximum price", () => {
+    for (const price of [0, 1_000_000])
+      expect(parseMenu({ items: [{ ...item, price }] })[0].price).toBe(price);
+  });
+  test("identifies the item with a negative price", () => {
+    expect(() => parseMenu({ items: [{ ...item, price: -1 }] })).toThrow(
+      'Item "rice": price must be an integer between 0 and 1000000; received -1',
+    );
+  });
   test("rejects invalid prices", () => {
     for (const price of [-1, 1.5, "65", Infinity, 1000001])
       expect(() => parseMenu({ items: [{ ...item, price }] })).toThrow();

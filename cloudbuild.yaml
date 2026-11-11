@@ -1,5 +1,6 @@
 # Run manually only; see README for prerequisites. No cloud commands run locally.
 steps:
+  # Validate root config.json, lint, typecheck, and test before building any image.
   - id: check
     name: oven/bun:1.4.4
     entrypoint: sh
