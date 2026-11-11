@@ -1,10 +1,46 @@
 {
   "items": [
-    { "id": "braised-pork-rice", "name": "滷肉飯", "description": "慢燉滷肉配上熱騰騰的白飯，簡單又滿足。", "category": "主食", "price": 65 },
-    { "id": "chicken-rice", "name": "雞肉飯", "description": "鮮嫩雞絲、油蔥香氣，再搭配一份醃蘿蔔。", "category": "主食", "price": 75 },
-    { "id": "beef-noodles", "name": "紅燒牛肉麵", "description": "紅燒湯頭、軟嫩牛肉與吸滿湯汁的麵條。", "category": "主食", "price": 180 },
-    { "id": "greens", "name": "燙青菜", "description": "清爽的當季青菜，搭配蒜香醬汁。", "category": "小菜", "price": 45 },
-    { "id": "radish-soup", "name": "蘿蔔排骨湯", "description": "白蘿蔔與排骨細火燉煮，暖暖喝一碗。", "category": "湯品", "price": 60 },
-    { "id": "black-tea", "name": "古早味紅茶", "description": "熟悉的茶香與微甜滋味，冰涼解渴。", "category": "飲品", "price": 30 }
+    {
+      "id": "braised-pork-rice",
+      "name": "滷肉飯",
+      "description": "慢燉滷肉配上熱騰騰的白飯，簡單又滿足。",
+      "category": "主食",
+      "price": 65
+    },
+    {
+      "id": "chicken-rice",
+      "name": "雞肉飯",
+      "description": "鮮嫩雞絲、油蔥香氣，再搭配一份醃蘿蔔。",
+      "category": "主食",
+      "price": 75
+    },
+    {
+      "id": "beef-noodles",
+      "name": "紅燒牛肉麵",
+      "description": "紅燒湯頭、軟嫩牛肉與吸滿湯汁的麵條。",
+      "category": "主食",
+      "price": 180
+    },
+    {
+      "id": "greens",
+      "name": "燙青菜",
+      "description": "清爽的當季青菜，搭配蒜香醬汁。",
+      "category": "小菜",
+      "price": 45
+    },
+    {
+      "id": "radish-soup",
+      "name": "蘿蔔排骨湯",
+      "description": "白蘿蔔與排骨細火燉煮，暖暖喝一碗。",
+      "category": "湯品",
+      "price": 60
+    },
+    {
+      "id": "black-tea",
+      "name": "古早味紅茶",
+      "description": "熟悉的茶香與微甜滋味，冰涼解渴。",
+      "category": "飲品",
+      "price": 30
+    }
   ]
 }

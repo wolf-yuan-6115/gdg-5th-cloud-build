@@ -8,10 +8,20 @@ steps:
       - bun install --frozen-lockfile && bun run check
   - id: build
     name: gcr.io/cloud-builders/docker
-    args: ['build', '-t', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID', '.']
+    args:
+      [
+        "build",
+        "-t",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID",
+        ".",
+      ]
   - id: push
     name: gcr.io/cloud-builders/docker
-    args: ['push', '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID']
+    args:
+      [
+        "push",
+        "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID",
+      ]
   - id: deploy
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: gcloud
@@ -30,12 +40,12 @@ steps:
       - --cpu=1
       - --quiet
 images:
-  - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID'
+  - "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_SERVICE}:$BUILD_ID"
 substitutions:
   _REGION: us-central1
   _REPOSITORY: food-demo
   _SERVICE: food-demo
-  _RUNTIME_SERVICE_ACCOUNT: 'food-demo-runtime@$PROJECT_ID.iam.gserviceaccount.com'
+  _RUNTIME_SERVICE_ACCOUNT: "food-demo-runtime@$PROJECT_ID.iam.gserviceaccount.com"
 options:
   logging: CLOUD_LOGGING_ONLY
   dynamicSubstitutions: true
