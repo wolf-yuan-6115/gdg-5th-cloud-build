@@ -46,7 +46,7 @@ substitutions:
   _REGION: us-central1
   _REPOSITORY: food-demo
   _SERVICE: food-demo
-  _RUNTIME_SERVICE_ACCOUNT: "food-demo-runtime@$PROJECT_ID.iam.gserviceaccount.com"
+  _RUNTIME_SERVICE_ACCOUNT: "food-demo-runtime@${PROJECT_ID}.iam.gserviceaccount.com"
 options:
   logging: CLOUD_LOGGING_ONLY
   dynamicSubstitutions: true

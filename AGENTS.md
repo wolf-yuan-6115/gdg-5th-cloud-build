@@ -31,3 +31,5 @@
 - Eight Bun tests pass, including accepted price boundaries and a negative-price diagnostic. Isolated CLI checks confirmed negative prices and malformed JSON exit 1 without modifying the real menu.
 
 - Learner-facing menu fields are name, description, category, and price only. Identical items are allowed and get distinct positional IDs; no persistence requires cross-version identity.
+
+- Runtime service-account nested substitution uses braced `${PROJECT_ID}` with dynamicSubstitutions enabled. An unbraced `$PROJECT_ID` reached gcloud literally during a user-run trigger build. Remove stale trigger overrides when applying the fix. YAML structure validated locally; corrected cloud deployment still requires the user to rerun the trigger.

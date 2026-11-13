@@ -130,6 +130,12 @@ gcloud projects add-iam-policy-binding "$PROJECT_ID" --member="user:$DEMO_USER" 
 gcloud iam service-accounts add-iam-policy-binding "$BUILD_SA" --member="user:$DEMO_USER" --role=roles/iam.serviceAccountUser
 ```
 
+### Trigger 的專案 ID 自動替換
+
+`cloudbuild.yaml` 的 runtime 服務帳戶使用 `food-demo-runtime@${PROJECT_ID}.iam.gserviceaccount.com`，搭配 `dynamicSubstitutions: true`，自動帶入執行建置的 Google Cloud 專案 ID。學員只要在自己的專案建立 `food-demo-runtime`，不必手動填入專案 ID 到這個欄位。
+
+如果 Trigger 的 Substitution variables 曾設定 `_RUNTIME_SERVICE_ACCOUNT`，請移除該覆寫，讓它使用 YAML 的預設值；保留覆寫時也必須使用 `${PROJECT_ID}` 的大括號寫法。更新 GitHub 上的 YAML 後，從 Trigger 重新 Run，確認建置來源是新 Commit。若錯誤訊息仍含字面上的 `$PROJECT_ID`，請檢查 Trigger 覆寫與這次建置使用的 YAML。
+
 ### 提交與觀察建置
 
 使用區域性來源儲存桶，並授權建置帳戶讀取來源。桶名必須全域唯一；下列名稱可自行替換。
